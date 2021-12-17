@@ -1,0 +1,34 @@
+{
+  "name": "smailer",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "live": "nodemon app.js",
+    "out": "nodemon outbox.js"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@inrupt/artifact-generator": "^1.0.4",
+    "@inrupt/solid-client": "^1.14.0",
+    "@inrupt/solid-client-authn-browser": "^1.11.2",
+    "@inrupt/solid-client-authn-node": "^1.11.2",
+    "@inrupt/solid-client-notifications": "^0.1.0",
+    "@inrupt/vocab-common-rdf": "^1.0.3",
+    "cookie-session": "^1.4.0",
+    "express": "^4.17.1",
+    "mailparser": "^3.4.0",
+    "nodemailer": "^6.7.0",
+    "parcel-bundler": "^1.9.4"
+  },
+  "browserslist": [
+    "last 3 and_chr versions",
+    "last 3 chrome versions",
+    "last 3 opera versions",
+    "last 3 ios_saf versions",
+    "last 3 safari versions",
+    "last 3 edge versions"
+  ]
+}

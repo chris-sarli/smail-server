@@ -1,0 +1,5 @@
+.DS_Store
+/docker-data
+/smailer/node_modules
+/docker-data-dms
+/docker-compose.yml

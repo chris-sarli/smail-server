@@ -1,0 +1,61 @@
+version: '3.3'
+
+services:
+  smailer:
+    build: ./smailer
+    container_name: smailer
+    restart: always
+    volumes:
+      - ./docker-data/dms/mail-data/:/var/mail-data/
+    depends_on:
+      - "mailserver"
+    environment:
+      - POD_URL=https://chris-sarli.inrupt.net/
+      - CLIENT_ID=[EDIT]
+      - CLIENT_SECRET=[EDIT]
+      - REFRESH_TOKEN=[EDIT]
+      - OIDC_ISSUER=https://inrupt.net
+      - SMAIL_DIR=smail/
+      - DOMAIN_NAME=chris.sarl
+      - USER=test
+      - STORAGE_DIR=/var/mail-data/
+  mailserver:
+    # mailserver configuration adapted from
+    # https://github.com/docker-mailserver/docker-mailserver#with-relevant-environmental-variables
+    image: docker.io/mailserver/docker-mailserver:latest
+    container_name: mailserver
+    hostname: smail
+    domainname: chris.sarl
+    ports:
+      - "25:25"
+      - "587:587"
+      - "465:465"
+      - "110:110" # POP3
+      - "995:995" # POP3 (with TLS)
+    volumes:
+      - ./docker-data/dms/mail-data/:/var/mail/
+      - ./docker-data/dms/mail-state/:/var/mail-state/
+      - ./docker-data/dms/mail-logs/:/var/log/mail/
+      - ./docker-data/dms/config/:/tmp/docker-mailserver/
+      # The "from" path will vary based on where your certs are locally:
+      - ./docker-data/certbot/certs/:/etc/letsencrypt/
+      - /etc/localtime:/etc/localtime:ro
+    environment:
+      - ENABLE_FAIL2BAN=1
+      # Using letsencrypt for SSL/TLS certificates
+      - SSL_TYPE=letsencrypt
+      # Allow sending emails from other docker containers
+      # Beware creating an Open Relay: https://docker-mailserver.github.io/docker-mailserver/edge/config/environment/#permit_docker
+      - PERMIT_DOCKER=network
+      # All env below are default settings:
+      - DMS_DEBUG=0
+      - ONE_DIR=1
+      - ENABLE_POSTGREY=0
+      - ENABLE_CLAMAV=0
+      - ENABLE_SPAMASSASSIN=0
+      # You may want to enable this: https://docker-mailserver.github.io/docker-mailserver/edge/config/environment/#spoof_protection
+      # See step 8 below, which demonstrates setup with enabled/disabled SPOOF_PROTECTION:
+      - SPOOF_PROTECTION=0
+    cap_add:
+      - NET_ADMIN # For Fail2Ban to work
+      - SYS_PTRACE
